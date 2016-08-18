@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Add Pagination";
+}
+
+<h2>Add Pagination</h2>
+<div ng-app="myApp" ng-cloak>
+    <div ng-controller="addPaginationCtrl">
+        <!-- Dishes Table -->
+        <div class="table-responsive table-Item">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;" width="10%">#</th>
+                        <th>Dish Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loading message -->
+                    <tr ng-show="showLoading">
+                        <td colspan="2">
+                            <div><b>{{LoadingText}}</b></div>
+                        </td>
+                    </tr>
+                    <tr dir-paginate="idx in dishesPageList | itemsPerPage:itemsPerPage" total-items="total_count" pagination-id="dishesPagination">
+                        <td>{{itemsPerPage *(pageno-1)+$index+1}}</td>
+                        <td>{{idx}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div align="right">
+                <dir-pagination-controls max-size="8"
+                                         direction-links="true"
+                                         boundary-links="true"
+                                          pagination-id="dishesPagination"
+                                         on-page-change="getData(newPageNumber)">
+                </dir-pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/AngularPagination/dirPagination.js"></script>
+<script>
+    (function ($) {
+        'use strict';
+
+        // Injects "angularUtils.directives.dirPagination" dependency
+        angular.module("myApp", ["angularUtils.directives.dirPagination"]);
+
+        angular.module("myApp").controller("addPaginationCtrl", ["$scope", "addPaginationService", function ($scope, addPaginationService) {
+            // Initialize variable
+            $scope.itemsPerPage = 10;
+            $scope.pageno = 1;
+            $scope.total_count = 0;
+            $scope.dishesPageList = [];
+
+            // This would fetch the data on page change.
+            $scope.getData = function (pageno) { 
+                // Proceed to search function once validation success
+                $scope.LoadingText = "Loading Dishes...";
+                $scope.showLoading = true;
+
+                // Resets page list and total count on each page change
+                $scope.dishesPageList = [];
+                $scope.total_count = 0;
+
+                // Assign new page number
+                $scope.pageno = pageno;
+
+                addPaginationService.searchDishesPage(pageno)
+                    .then(function (result) {
+                        // if total dish count more than zero hides the loading text
+                        if (result.TotalDishesCount > 0) {
+                            $scope.showLoading = false;
+                        }
+                        else {
+                            $scope.LoadingText = "Dishes not available.";
+                            $scope.showLoading = true;
+                        };
+
+                        // Assigns total count and page list
+                        $scope.total_count = result.TotalDishesCount;
+                        $scope.dishesPageList = result.DishesPageList;
+                    }, function () {
+                        // error
+                        $scope.LoadingText = "Error occur, please try again.";
+                        $scope.showLoading = true;
+                    }).finally(function () {
+                        // called no matter success or failure                        
+                    });
+            };
+
+            // Initial load set to page 1
+            $scope.getData(1);
+        }]);
+
+        angular.module("myApp").factory("addPaginationService", ["$http", function ($http) {
+            var service = {};
+
+            var dishesList = [];
+
+            service.getDishesList = function () {
+                return dishesList;
+            };
+
+            // Ajax call to server to retrieve dishes data based on page number
+            service.searchDishesPage = function (pageno) {
+                var model = {
+                    Page: pageno
+                }
+
+                return $http({
+                    method: "POST",
+                    url: '@Url.Action("dishesPagination", "Home")',
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    data: model
+                }).then(
+                function successCallback(response) {
+                    dishesList = response.data.DishesPageList;
+                    return response.data;
+                },
+                function errorCallback(response) {
+                    console.log("Search Dishes Error:" + response);
+                    // May add exception code
+                });
+            };
+
+            return service;
+        }]);
+    })(jQuery);
+</script>
