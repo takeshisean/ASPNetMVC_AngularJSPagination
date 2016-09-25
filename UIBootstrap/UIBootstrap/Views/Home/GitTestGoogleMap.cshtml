@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Git Test Google Map";
+}
+
+<h2>Git Test Google Map</h2>
+<div ng-app="myTestGoogleMapApp" ng-cloak>
+    <div ng-controller="testGoogleMapCtrl">
+        {{testGoogleMap}}
+    </div>
+</div>
+
+<script>
+    (function ($) {
+        'use strict';
+        angular.module("myTestGoogleMapApp", []);
+
+        angular.module("myTestGoogleMapApp").controller("testGoogleMapCtrl", ["$scope", function ($scope) {
+            $scope.testGoogleMap = "TEST";
+        }]);
+
+    })(jQuery);
+</script>

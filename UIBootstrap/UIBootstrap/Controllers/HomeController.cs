@@ -34,6 +34,11 @@ namespace UIBootstrap.Controllers
             return View();
         }
 
+        public ActionResult GitTestGoogleMap()
+        {
+            return View();
+        }
+
         public JsonResult dishesPagination(int? Page)
         {
             List<string> dishes = new List<string>();
