@@ -25,9 +25,14 @@
 
         <!-- Google map start -->
         <div class="col-md-12">
+            <script id="searchbox.tpl.html" type="text/ng-template">
+                <input type="text" placeholder="Search">
+            </script>
             <ui-gmap-google-map center="map.center" refresh="true" zoom="map.zoom" draggable="true" options="map.options" data-tap-disabled="true">
-                <ui-gmap-window show="map.window.show" coords="map.window.model" options="map.window.options" closeClick="map.window.closeClick()">
+                <!--Search box-->
+                <!--<ui-gmap-search-box template="searchbox.template" events="searchbox.events" ng-model="searchbox.model" options='searchbox.options'></ui-gmap-search-box>-->
 
+                <ui-gmap-window show="map.window.show" coords="map.window.model" options="map.window.options" closeClick="map.window.closeClick()">
                     <table cellpadding="0" cellspacing="0" class="gmapWindow">
                         <tr>
                             <td rowspan="2">
@@ -35,7 +40,6 @@
                             </td>
                         </tr>
                     </table>
-
                 </ui-gmap-window>
                 <ui-gmap-markers idkey="marker.id" models="map.markers" coords="'self'" doCluster="false" fit="'true'" icon="'icon'" events="map.markersEvents " options="'options'"></ui-gmap-markers>
             </ui-gmap-google-map>
@@ -86,31 +90,25 @@
                     }
                 };
 
-                //$scope.NpoMarkers = dataService.initializeNPOCoordinate();
-                //$scope.map = {
-                //    center: {
-                //        latitude: 2.6817,
-                //        longitude: 101.6613
+                //$scope.searchbox = {
+                //    model: "",
+                //    template: 'searchbox.tpl.html',
+                //    options: {
+                //        autocomplete: true,
+                //        componentRestrictions: { country: 'my' }
                 //    },
-                //    zoom: 2,
-                //    pan: 1,
-                //    options: { scrollwheel: true },
-                //    //markers: $scope.NpoMarkers,
-                //    window: {
-                //        marker: {},
-                //        show: false,
-                //        closeClick: function () {
-                //            this.show = false;
-                //        },
-                //        options: {}, // define when map is ready
-                //        title: ''
+                //    events: {
+                //        places_changed: function (searchbox) {
+                //            vm.place = searchbox.getPlaces()[0];
+                //            vm.coordinates = { latitude: vm.place.geometry.location.lat(), longitude: vm.place.geometry.location.lng() }
+                //        }
                 //    }
                 //};
-
+                
                 uiGmapGoogleMapApi.then(function (maps) {
                     //maps.visualRefresh = true;
 
-                    // You can now merge your options which need google.map helpers
+                    // Merge options which need google.map helpers
                     angular.merge($scope.map, {
                         options: {
                             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -167,11 +165,9 @@
                                 id : 1,
                                 latitude: 3.086097,
                                 longitude: 101.694346,
-                                //3.086097, 101.694346
                                 title: "Kondominium Tropicana Lebuhraya Sungai Besi"
                             }
                         ];
-
 
                     return npoMarkerInfo;
                 };
