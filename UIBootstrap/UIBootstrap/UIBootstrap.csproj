@@ -200,6 +200,9 @@
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\AngularGoogleMaps\angular-google-maps.min.js" />
+    <Content Include="Scripts\AngularGoogleMaps\angular-simple-logger.min.js" />
+    <Content Include="Scripts\AngularGoogleMaps\lodash.min.js" />
     <Content Include="Scripts\AngularPagination\dirPagination.js" />
     <Content Include="Scripts\AngularPagination\dirPagination.tpl.html" />
     <Content Include="Scripts\bootstrap.js" />
